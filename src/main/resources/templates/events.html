@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Manage Events</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" href="../static/vendor/datatables/dataTables.css" th:href="@{/vendor/datatables/dataTables.css}">
+    <link rel="stylesheet" type="text/css" href="../static/vendor/font_awesome/css/all.css" th:href="@{/vendor/font_awesome/css/all.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{/css/main.css}">
+    <link rel="stylesheet prefetch" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <div class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-grin-alt"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">
+                Manager
+                <sup>TM</sup>
+            </div>
+        </a>
+        <hr class="sidebar-divider my-2">
+        <li class="nav-item toggle">
+            <a class="nav-link" href="#" th:href="@{/manage/dashboard}">
+                <i class="fas fa-home nav-icon"></i>
+                <span><strong>Dashboard</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider my-2">
+        <div class="sidebar-heading">Events</div>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/manage/events}">
+                <i class="fas fa-calendar-alt nav-icon"></i>
+                <span><strong>Manage Events</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider my-2">
+        <div class="sidebar-heading">Candidates</div>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/manage/candidates}">
+                <i class="fas fa-users nav-icon"></i>
+                <span><strong>Manage Candidates</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider my-2">
+        <div class="sidebar-heading">Statistics</div>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/manage/statistics}">
+                <i class="fas fa-chart-bar nav-icon"></i>
+                <span><strong>Statistics</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </div>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <div class="col-6 pt-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown no-arrow mt-1">
+                        <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#logout-confirm-message"><i class="fas fa-sign-out-alt text-gray-300"></i></button>
+                    </li>
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    <li class="nav-item dropdown no-arrow mt-1">
+                        <button class="btn btn-success btn-circle" data-toggle="modal" data-target="#activity-log-modal"><i class="fas fa-history text-gray-300"></i></button>
+                    </li>
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    <li class="nav-item dropdown no-arrow mt-1">
+                        <button class="btn btn-info btn-circle" data-toggle="modal" data-target="#profile-modal"><i class="fas fa-user text-gray-300"></i></button>
+                    </li>
+                </ul>
+            </nav>
+            <div class="container-fluid">
+                <h1 class="h3 mb-2 text-gray-800 py-2"></h1>
+                <hr>
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Event List</h1>
+                    <h3 class="h3 mb-0 text-gray-800"></h3>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-mb-12 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <a href="#event-filter-form" class="card-header collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample" tabindex="-1">
+                                <h4 class="text-info">Filter</h4>
+                            </a>
+                            <div class="collapse" id="event-filter-form" style="">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-4 col-lg-4 col-mb-6 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="filter-university">Site</label>
+                                                <select multiple class="form-control" id="filter-site">
+                                                    <option>HN</option>
+                                                    <option>HCM</option>
+                                                    <option>DN</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-mb-6 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="filter-skill">Skill</label>
+                                                <select multiple class="form-control" id="filter-skill">
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4 col-lg-4 col-mb-6 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="filter-status">Status</label>
+                                                <select multiple class="form-control" id="filter-status">
+                                                    <option>In-Progress</option>
+                                                    <option>Done</option>
+                                                    <option>Planning</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-mb-12 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="filter-university">University</label>
+                                                <select multiple class="form-control" id="filter-university">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-mb-12 col-sm-12">
+                                            <div class="form-group">
+                                                <label for="filter-program">Program</label>
+                                                <select multiple class="form-control" id="filter-program">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="container-fluid text-center">
+                                            <button class="btn btn-success footer-button" id="filter">Filter</button>
+                                            <!--<button class="btn btn-success footer-button" id="clear-filter">Clear</button>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-mb-12 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-lg-8 col-xl-8 col-mb-8 col-sm-12">
+                                        <h4 class="mt-3 text-primary">Events</h4>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-mb-4 col-sm-12">
+                                        <div class="row float-right">
+                                            <div class="col-4">
+                                                <button class="btn btn-info btn-small btn-circle" data-toggle="modal" data-target="#import-modal">
+                                                    <i class="fas fa-upload"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-success btn-small btn-circle" data-toggle="modal" data-target="#new-event-modal">
+                                                    <i class="fas fa-calendar-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-warning btn-small btn-circle" data-toggle="modal" data-target="#export-modal">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="event-table" class="table table-striped nowrap" style="width:100%">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Actions</th>
+                                            <th>Course Code</th>
+                                            <th>Course Name</th>
+                                            <th>Skill</th>
+                                            <th>Number of Students</th>
+                                            <th>Supplier/Partner</th>
+                                            <th>Planned Start Date</th>
+                                            <th>Planned Start Date</th>
+                                            <th>Actual Start Date</th>
+                                            <th>Actual End Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="event-body">
+                                        <tr th:each = "event: ${events}" th:id = "'event-row-'+${event.id}">
+                                            <td>
+                                                <button class="btn btn-info btn-small candidate-list" th:id="'candidate-list-'+${event.id}" data-toggle="modal" data-target="#candidate-attend-list"><i class="fas fa-search"></i></button>
+                                                <button class="btn btn-success btn-small all-candidate-btn editbtn" th:id="'editbtn-'+${event.id}" data-toggle="modal" data-target="#event-information"><i class="fas fa-edit"></i></button>
+                                                <button type="button" class="btn btn-danger btn-small deletebtn" th:id="'deletebtn-'+${event.id}" data-toggle="modal" data-target="#event-delete"><i class="fas fa-calendar-times"></i></button>
+                                            </td>
+                                            <th th:text="${event.courseCode}" th:id="'courseCode-'+${event.id}"></th>
+                                            <th th:text="${event.program.name}"></th>
+                                            <th th:text="${event.skill.skillName}"></th>
+                                            <th th:text="${#sets.size(event.statuses)}"></th>
+                                            <th th:text="${event.university.name}"></th>
+                                            <th th:text="${#dates.format(event.plannedStartDate,'yyyy/MM/dd')}"></th>
+                                            <th th:text="${#dates.format(event.plannedEndDate,'yyyy/MM/dd')}"></th>
+                                            <th th:text="${#dates.format(event.actualStartDate,'yyyy/MM/dd')}"></th>
+                                            <th th:text="${#dates.format(event.actualEndDate,'yyyy/MM/dd')}"></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Candidate Attend List Modal-->
+            <div class="modal fade" id="candidate-attend-list" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModal">
+                <div class="modal-dialog modal-xl modal-avatar cascading-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Candidates Attends List</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container d-flex justify-content-center py-4">
+                                <i class="fas fa-users fa-4x yellow-icon"></i>
+                            </div>
+                            <div class="container d-flex justify-content-center pb-4">
+                                <h4 id="course-code"></h4>
+                            </div>
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <table class="table table-striped hover nowrap" id="candidate-list" style="width:100%">
+                                        <thead class="thead-light">
+                                            <th scope="col">Action</th>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Gender</th>
+                                            <th scope="col">DOB</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">University</th>
+                                            <th scope="col">Faculty</th>
+                                            <th scope="col">Status</th>
+                                        </thead>
+                                        <tbody id="table-candidate">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Event Detail Modal-->
+            <div class="modal fade" id="event-information" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog cascading-modal modal-avatar modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Event Information</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid text-center">
+                                <i class="fas fa-calendar-alt fa-4x red-icon"></i>
+                            </div>
+                            <div class="container-fluid text-center py-3">
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="event-code"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-warning shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sites</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="event-site"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-city fa-2x text-gray-300 yellow-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-danger shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Program</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="event-name"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="far fa-clipboard fa-2x text-gray-300 blue-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-info shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Skills</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="event-sub-subject"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-book fa-2x text-gray-300 green-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-primary shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Candidates</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="event-n-students"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-users fa-2x text-gray-300 red-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-mb-12 col-sm-12">
+                                    <div class="card bg-light border-top-info shadow mb-3">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h4 class="text-info">Informations</h4>
+                                                </div>
+                                                <div class="col-6 float-right">
+                                                    <button class="btn btn-success btn-small btn-circle" id="event-editbtn"><i class="fas fa-edit"></i></button>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                                                    <div class="card bg-light border-top-info shadow mb-3">
+                                                        <div class="card-header">
+                                                            <h6 class="text-info font-weight-bold">Main Information</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">PARTNER : <span class="font-weight-bold text-secondary" id="event-partner"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">SUBJECT-TYPE: <span class="font-weight-bold text-secondary" id="event-subject"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">FORMAT TYPE: <span class="font-weight-bold text-secondary" id="event-format"></span></h6>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                                    <div class="card bg-light border-top-info shadow mb-3">
+                                                        <div class="card-header">
+                                                            <h6 class="text-info font-weight-bold">Plan Information</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">START DATE : <span class="font-weight-bold text-secondary" id="event-plan-startDate"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">END DATE: <span class="font-weight-bold text-secondary" id="event-plan-endDate"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">NUMBER OF STUDENTS: <span class="font-weight-bold text-secondary" id="event-plan-students"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">LEARNING TIME: <span class="font-weight-bold text-secondary" id="event-n-hours"></span> (hrs)</h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">BUDGET CODE: <span class="font-weight-bold text-secondary" id="event-budgetCode"></span></h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                                    <div class="card bg-light border-top-info shadow mb-3">
+                                                        <div class="card-header">
+                                                            <h6 class="text-info font-weight-bold">Actual Information</h6>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">START DATE : <span class="font-weight-bold text-secondary" id="event-actual-startDate"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">END DATE: <span class="font-weight-bold text-secondary" id="event-actual-endDate"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">PASSED STUDENTS: <span class="font-weight-bold text-secondary" id="event-actual-students"></span></h6>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <h6 class="text-info">LEARNING TIME: <span class="font-weight-bold text-secondary" id="event-actual-n-hours"></span> (hrs)</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-primary footer-button" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Edit Event Modal-->
+            <div class="modal fade" id="event-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog cascading-modal modal-avatar modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Edit Event</h5>
+                            <button class="btn btn-small float-left" id="edit-event-dismiss"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <span id="event-id"></span>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary">Site</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-site" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary">Course Name</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-name" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary">Subject</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-subject" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary">Sub-Subject</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-sub-subject" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary">Format</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-format" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary">Supplier/Partner</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-partner" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary">Plan Start Date</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-start-date" class="form-control" type="text" readonly="readonly">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary">Plan End Date</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-end-date" class="form-control" type="text" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary">Actual Start Date</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-actual-start-date" class="form-control" type="text" readonly="readonly">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary">Actual End Date</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="e-actual-end-date" class="form-control" type="text" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success btn-footer" id="save-edit-event">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Delete Event Modal-->
+            <div class="modal fade" id="event-delete" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Confirmation</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <i class="fas fa-times fa-4x red-icon"></i><br>
+                            <h3 class="text-info">Are you sure you want to delete this event?</h3>
+                            <span id="delete-id" hidden></span>
+                            <br>
+                            <h3 id="delete-event-message" class="text-danger"></h3>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button th:id="delete-event-confirm" class="btn btn-danger footer-button">Yes</button>
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Import Modal-->
+            <!--Import Modal-->
+            <div class="modal fade" id="import-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-warning" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Import</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <i class="fas fa-uploadFile-excel fa-4x lime-icon"></i>
+                            <span id="result"></span>
+                            <h4 class="text-success pt-5">Choose an excel file to import</h4>
+                            <div class="form-group">
+                                <form id="import-form" method="post" enctype="multipart/form-data" action="/manage/upload" th:action="@{/manage/upload}">
+                                    <input class="form-control" type="file" name="file" accept=".xls,.xlsx">
+                                    <br>
+                                    <button id="import-btn" class="btn btn-success" type="submit" value="Upload file">Upload File</button>
+                                </form>
+                            </div>
+                            <hr>
+                            <table class="table table-striped nowrap" id="upload-errors" style="width:100%">
+                                <thead class="thead-dark">
+                                <th>Row</th>
+                                <th>Error</th>
+                                </thead>
+                                <tbody id="upload-errors-table">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Export Modal-->
+            <div class="modal fade" id="export-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-warning" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Export</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <i class="fas fa-uploadFile-download fa-4x red-icon"></i>
+                            <span id="export-message"></span>
+                            <h4 class="text-success pt-5">Export current table</h4>
+                            <h4 class="text-success pt-2">Please enter the name of the file</h4>
+                            <div class="row pt-5">
+                                <div class="col-9 pt-1">
+                                    <input class="form-control" id="export-filename" type="text" placeholder="filename">
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-info btn-small footer-button" id="export-btn"><i class="fas fa-download"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--New Event Modal-->
+            <div class="modal fade" id="new-event-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-warning" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">New Event</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid text-center">
+                                <i class="fas fa-calendar-plus fa-4x blue-icon"></i>
+                            </div>
+                            <h5 class="text-info m-2">Required Information</h5>
+                            <div class="form-group mx-4">
+                                <label class="text-danger">Site</label>
+                                <input id="new-event-site" class="form-control" placeholder="Site" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-warning">Subject</label>
+                                <input id="new-event-subject" class="form-control" placeholder="Subject" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-info">Sub-subject</label>
+                                <input class="form-control" placeholder="Sub-subject" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-danger">University</label>
+                                <input class="form-control" placeholder="University" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-danger">Faculty</label>
+                                <input class="form-control" placeholder="Faculty" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-info">Format</label>
+                                <input class="form-control" placeholder="Sub-subject" type="text">
+                            </div>
+                            <h5 class="text-info m-2">Plan</h5>
+                            <div class="form-group mx-4">
+                                <label class="text-danger">Start Date</label>
+                                <input class="form-control" placeholder="Site" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-info">End Date</label>
+                                <input class="form-control" placeholder="Course Code" type="text">
+                            </div>
+                            <div class="form-group mx-4">
+                                <label class="text-warning">Budget</label>
+                                <input class="form-control" placeholder="Supplier/Partner" type="text">
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-success footer-button" data-dismiss="modal">Add</button>
+                            <button type="button" class="btn btn-danger footer-button" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Profile Modal-->
+            <div class="modal fade" id="profile-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-notify modal-danger" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Profile</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container text-center">
+                                <i class="fas fa-id-badge fa-4x blue-icon"></i>
+                                <h3 class="text-info pt-1 pb-3" th:text="${admin}"></h3>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-xl-6 col-lg-6 col-mb-6 col-sm-6">
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-mb-6 col-sm-6">
+                                    <button id="profile-enable-edit" class="btn btn-info float-right">
+                                        <i class="fas fa-lock-open green-icon nav-icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-2">
+                                    <label class="text-info" for="profile-name">Name</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-name" class="form-control" disabled>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-success" for="profile-email">Email</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-email" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-2">
+                                    <label class="text-warning" for="profile-name">Phone</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-phone" class="form-control" disabled>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-danger" for="profile-email">Unit</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-unit" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--History Modal-->
+            <div class="modal fade" id="activity-log-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Activity Log</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <i class="fas fa-history fa-4x red-icon"></i>
+                            <h3 class="text-info pt-1 pb-3">Admin 123</h3>
+                            <table class="table table-striped table-bordered">
+                                <thead class="thead-light">
+                                <th scope="col" width="5%">#</th>
+                                <th scope="col" width="20%">Time</th>
+                                <th scope="col" width="50%">Activity</th>
+                                <th scope="col" width="25%">Result</th>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Logout Confirm Modal-->
+            <div class="modal fade" id="logout-confirm-message" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Logout</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <i class="fas fa-times fa-4x red-icon"></i><br>
+                            <h3 class="text-info">Are you sure you want to logout this account?</h3>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button id="logout-confirm" class="btn btn-danger footer-button">Yes</button>
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Manager TM @ 2019</span>
+                    </div>
+                </div>
+            </footer>
+            <a class="scroll-to-top rounded" href="#page-top" style="display: inline;">
+                <i class="fas fa-angle-up"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<a class="scroll-to-top rounded" href="#page-top" style="display: inline;">
+    <i class="fas fa-angle-up"></i>
+</a>
+<script src="../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+<script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+<script src="../static/vendor/datepicker/datepicker.js" th:src="@{/vendor/datepicker/datepicker.js}"></script>
+<script src="../static/vendor/datatables/jquery.dataTables.js" th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+<script src="../static/vendor/datatables/dataTables.bootstrap4.js" th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+<script src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+<script src="../static/js/events.js" th:src="@{/js/events.js}"></script>
+
+
+</body>
+</html>

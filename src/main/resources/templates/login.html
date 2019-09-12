@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" href="../static/vendor/font_awesome/css/all.css" th:href="@{/vendor/font_awesome/css/all.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body class="bg-primary">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div th:if="${param.error}">
+                                    <div class="text-center">
+                                        <div class="alert alert-danger">Bad Credentials</div>
+                                    </div>
+                                </div>
+                                <div th:if="${param.logout}">
+                                    <div class="text-center">
+                                        <div class="alert alert-success">You Successfully Logout</div>
+                                    </div>
+                                </div>
+                                <div th:if="${param.blocked}">
+                                    <div class="text-center">
+                                        <div class="alert alert-success">You have been blocked to login for 5 min</div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">Welcome</h1>
+                                </div>
+                                <form class="user" id="loginform" th:action="@{/login}" method="post">
+                                    <div class="form-group">
+                                        <input type="email" id="email" name="username" class="form-control form-control-user" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" id="password" class="form-control form-control-user" placeholder="Password">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" class="custom-control-input" id="remember-me" name="remember-me">
+                                            <label class="custom-control-label" for="remember-me">Remember Me</label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="#" th:src="@{/forgotpassword}">Forgot Password?</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="small" href="#" th:href="@{/register}">Create an Account!</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Manage Candidates</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" href="../static/vendor/datatables/dataTables.css" th:href="@{/vendor/datatables/dataTables.css}">
+    <link rel="stylesheet" type="text/css" href="../static/vendor/font_awesome/css/all.css" th:href="@{/vendor/font_awesome/css/all.css}">
+    <link rel="stylesheet" type="text/css" href="../static/vendor/datepicker/datepicker.css" th:href="@{/vendor/datepicker/datepicker.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{/css/main.css}">
+
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <div class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-grin-alt"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">
+                Manager
+                <sup>TM</sup>
+            </div>
+        </a>
+        <hr class="sidebar-divider my-2">
+        <li class="nav-item toggle">
+            <a class="nav-link" href="#" th:href="@{/manage/dashboard}">
+                <i class="fas fa-home nav-icon"></i>
+                <span><strong>Dashboard</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider my-2">
+        <div class="sidebar-heading">Events</div>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/manage/events}">
+                <i class="fas fa-calendar-alt nav-icon"></i>
+                <span><strong>Manage Events</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider my-2">
+        <div class="sidebar-heading">Candidates</div>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/manage/candidates}">
+                <i class="fas fa-users nav-icon"></i>
+                <span><strong>Manage Candidates</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider my-2">
+        <div class="sidebar-heading">Statistics</div>
+        <li class="nav-item">
+            <a class="nav-link" href="#" th:href="@{/manage/statistics}">
+                <i class="fas fa-chart-bar nav-icon"></i>
+                <span><strong>Statistics</strong></span>
+            </a>
+        </li>
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </div>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <div class="col-6 pt-1">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown no-arrow mt-1">
+                        <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#logout-confirm-message"><i class="fas fa-sign-out-alt text-gray-300"></i></button>
+                    </li>
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    <li class="nav-item dropdown no-arrow mt-1">
+                        <button class="btn btn-success btn-circle" data-toggle="modal" data-target="#activity-log-modal"><i class="fas fa-history text-gray-300"></i></button>
+                    </li>
+                    <div class="topbar-divider d-none d-sm-block"></div>
+                    <li class="nav-item dropdown no-arrow mt-1">
+                        <button class="btn btn-info btn-circle" data-toggle="modal" data-target="#profile-modal"><i class="fas fa-user text-gray-300"></i></button>
+                    </li>
+                </ul>
+            </nav>
+            <div class="container-fluid">
+                <h1 class="h3 mb-2 text-gray-800 py-2">Candidates List</h1>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-mb-12 col-sm-12">
+                            <div class="card shadow mb-4">
+                                <a href="#candidate-filter" class="card-header collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample" tabindex="-1">
+                                    <h4 class="text-info">Filter</h4>
+                                </a>
+                                <div class="collapse" id="candidate-filter" style="">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6 col-mb-12  col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="filter-university">University</label>
+                                                    <select multiple class="form-control" id="filter-university">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-mb-12  col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="filter-skill">Skill</label>
+                                                    <select multiple class="form-control" id="filter-skill">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-mb-12  col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="filter-status">Status</label>
+                                                    <select multiple class="form-control" id="filter-status">
+                                                        <option>Passed</option>
+                                                        <option>Cancel</option>
+                                                        <option>Active</option>
+                                                        <option>Failed</option>
+                                                        <option>Done</option>
+                                                        <option>Failed</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-6 col-lg-6 col-mb-12  col-sm-12">
+                                                <div class="form-group">
+                                                    <label for="filter-skill">Event</label>
+                                                    <select multiple class="form-control" id="filter-event">
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="container-fluid text-center">
+                                                <button class="btn btn-success footer-button" id="filter">Filter</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-xl-12 col-mb-12 col-sm-12">
+                        <div class="card shadow mb-4" id="candidate-list-card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-lg-8 col-xl-8 col-mb-8 col-sm-12">
+                                        <h4 class="mt-3 text-primary">Candidates</h4>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-mb-4 col-sm-12">
+                                        <div class="row float-right">
+                                            <div class="col-4">
+                                                <button class="btn btn-info btn-small btn-circle" data-toggle="modal" data-target="#import-modal">
+                                                    <i class="fas fa-upload"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-success btn-small btn-circle" data-toggle="modal" data-target="#new-candidate-modal">
+                                                    <i class="fas fa-user-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-warning btn-small btn-circle" data-toggle="modal" data-target="#export-modal">
+                                                    <i class="fas fa-file-export"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <table class="table table-striped nowrap display" id="candidate-table">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Actions</th>
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th>Gender</th>
+                                                    <th>University</th>
+                                                    <th>Faculty</th>
+                                                    <th>Email</th>
+                                                    <th>DOB</th>
+                                                    <th>Skill</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="candidate-list">
+                                                <tr th:each="candidate : ${candidates}">
+                                                    <td>
+                                                        <button class="btn btn-success btn-small candidate-edit" data-toggle="modal" data-target="#candidate-information" th:id="'edit-candidate-'+${candidate.id}"><i class="fas fa-user-edit"></i></button>
+                                                        <button type="button" class="btn btn-danger btn-small candidate-delete" data-toggle="modal" data-target="#candidate-delete" th:id="'delete-candidate-'+${candidate.id}"><i class="fas fa-user-times"></i></button>
+                                                    </td>
+                                                    <th th:text="${candidate.id}"></th>
+                                                    <th th:text="${candidate.name}"></th>
+                                                    <th th:text="${candidate.gender}"></th>
+                                                    <th th:text="${candidate.university.name}"></th>
+                                                    <th th:text="${candidate.faculty.name}"></th>
+                                                    <th th:text="${candidate.email}"></th>
+                                                    <th th:text="${candidate.dateOfBirth}"></th>
+                                                    <th th:text="${candidate.skill.skillName}"></th>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <th>Actions</th>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Gender</th>
+                                                <th>University</th>
+                                                <th>Faculty</th>
+                                                <th>Email</th>
+                                                <th>DOB</th>
+                                                <th>Skill</th>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Import Modal-->
+            <div class="modal fade" id="import-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-warning" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Import</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <i class="fas fa-uploadFile-excel fa-4x lime-icon"></i>
+                            <span id="result"></span>
+                            <h4 class="text-success pt-5">Choose an excel file to import</h4>
+                            <div class="form-group">
+                                <form id="import-form" method="post" enctype="multipart/form-data" action="/manage/upload" th:action="@{/manage/upload}">
+                                    <input class="form-control" type="file" name="file" accept=".xls,.xlsx">
+                                    <br>
+                                    <button id="import-btn" class="btn btn-success" type="submit" value="Upload file">Upload File</button>
+                                </form>
+                            </div>
+                            <hr>
+                            <table class="table table-striped nowrap" id="upload-errors" style="width:100%">
+                                <thead class="thead-dark">
+                                    <th>Row</th>
+                                    <th >Error</th>
+                                </thead>
+                                <tbody id="upload-errors-table">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Export Modal-->
+            <div class="modal fade" id="export-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-warning" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Export</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <i class="fas fa-uploadFile-download fa-4x red-icon"></i>
+                            <span id="export-message"></span>
+                            <h4 class="text-success pt-5">Export current table</h4>
+                            <h4 class="text-success pt-2">Please enter the name of the file</h4>
+                            <div class="row pt-5">
+                                <div class="col-9 pt-1">
+                                    <input class="form-control" id="export-filename" type="text" placeholder="filename">
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-info btn-small footer-button" id="export-btn"><i class="fas fa-download"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--New Candidate Modal-->
+            <div class="modal fade" id="new-candidate-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-warning" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">New Candidate</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container d-flex justify-content-center">
+                                <i class="fas fa-user-plus fa-4x purple-icon"></i>
+                            </div>
+                            <br>
+                            <span id="new-candidate-message"></span>
+                            <hr>
+                            <div class="form-group">
+                                <label class="text-info" for="new-candidate-university">University</label>
+                                <select id="new-candidate-university" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="text-info" for="new-candidate-university">Faculty</label>
+                                <select id="new-candidate-faculty" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="text-info" for="new-candidate-course">Course Code</label>
+                                <select id="new-candidate-course" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-name" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <form>
+                                    <label class="radio-inline">
+                                        <input id="new-gender-male" type="radio" name="optradio" checked>Male
+                                    </label>
+                                    <label class="radio-inline ml-5">
+                                        <input id="new-gender-female" type="radio" name="optradio">Female
+                                    </label>
+                                </form>
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-dob" class="form-control" placeholder="BirthDay">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-email" class="form-control" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-account" class="form-control" placeholder="Account" disabled>
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-phone" class="form-control" placeholder="Phone">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-facebook" class="form-control" placeholder="Facebook">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-gpa" class="form-control" placeholder="GPA" type="number">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-graduation" class="form-control" placeholder="Graduation Date">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-fulltime" class="form-control" placeholder="FullTime Date">
+                            </div>
+
+                            <div class="form-group">
+                                <select id="new-candidate-status" class="form-control" placeholder="Status">
+                                    <option>Active</option>
+                                    <option>Cancel</option>
+                                    <option>Done</option>
+                                    <option>Drop-Out</option>
+                                    <option>Failed</option>
+                                    <option>Passed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-fgrade" class="form-control" placeholder="Final Grade" type="number">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-clevel" class="form-control" placeholder="Completion Level">
+                            </div>
+                            <div class="form-group">
+                                <input id="new-candidate-cerid" class="form-control" placeholder="Certificate ID">
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button id="add-confirm" class="btn btn-success footer-button">Add</button>
+                            <button type="button" class="btn btn-danger footer-button" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Confirm Modal-->
+            <div class="modal fade" id="candidate-delete" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Confirmation</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <i class="fas fa-times fa-4x red-icon"></i><br>
+                            <h3 class="text-info">Are you sure you want to delete this candidate?</h3>
+                            <div class="text-secondary" id="candidate-delete-id" hidden></div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button id="delete-confirm" class="btn btn-danger footer-button">Yes</button>
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Logout Confirm Modal-->
+            <div class="modal fade" id="logout-confirm-message" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Confirmation</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <i class="fas fa-times fa-4x red-icon"></i><br>
+                            <h3 class="text-info">Are you sure you want to logout this account?</h3>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button id="logout-confirm" class="btn btn-danger footer-button">Yes</button>
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Change Status Modal-->
+            <div class="modal fade" id="change-status-modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="myModal">
+                <div class="modal-dialog modal-sm modal-avatar cascading-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="text-info">Change Status</h6>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-body">
+                                <span id="change-status-event" hidden></span>
+                                <span id="change-status-candidate" hidden></span>
+                                <div class="form-group">
+                                    <select id="change-status" class="form-control">
+                                        <option>Passed</option>
+                                        <option>Active</option>
+                                        <option>Drop-out</option>
+                                        <option>Cancel</option>
+                                        <option>Done</option>
+                                        <option>Failed</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input placeholder="Grade" id="change-grade" class="form-control" type="number">
+                                </div>
+                                <div class="form-group">
+                                    <input placeholder="Completion Level" id="change-clevel" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input placeholder="Certificate ID" id="change-cerid" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button id="change-confirm" class="btn btn-success footer-button">Save</button>
+                            <button id="change-cancel" type="button" class="btn btn-outline-danger footer-button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Information Modal-->
+            <div class="modal fade" id="candidate-information" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog cascading-modal modal-avatar modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="text-info pt-2">Candidate Informations</h3>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid text-center">
+                                <i class="fas fa-id-card fa-4x green-icon"></i>
+                                <h3 class="text-gray-800 font-weight-bold pt-3" id="candidate-name-big"></h3>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-primary shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Gender</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="candidate-gender"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-venus-mars fa-2x text-gray-300 blue-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-info shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Skills</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="candidate-skill"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-book fa-2x text-gray-300 green-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-left-warning shadow mb-3">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">University</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="candidate-university"></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-city fa-2x text-gray-300 yellow-icon"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                                    <div class="card bg-light border-top-info shadow mb-3">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h4 class="text-info">Candidate Information</h4>
+                                                </div>
+                                                <div class="col-6 float-left">
+                                                    <button class="btn btn-success btn-circle float-right" id="edit-candidate-button"><i class="fas fa-user-edit"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                                    <div class="card bg-light border-top-info shadow mb-3">
+                                                        <div class="card-header">
+                                                            <h5 class="text-info">Personal Information</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Name: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-name"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Gender :</label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-gender1"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Date of Birth: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-dob"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Email: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-email"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Phone: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-phone"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Facebook: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-fb"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+                                                    <div class="card bg-light border-top-info shadow mb-3">
+                                                        <div class="card-header">
+                                                            <h5 class="text-info">Educational Information: </h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">University: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-unv"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Faculty: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-faculty"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Graduation Date: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-graduation"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">FullTime Working Available Date: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-fulltime"></div>
+                                                            </div>
+                                                            <div class="form-group form-inline">
+                                                                <label class="text-info pr-2">Grade: </label>
+                                                                <div class="text-secondary font-weight-bold" id="candidate-grade"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                                                    <div class="card bg-light border-top-info shadow mb-3">
+                                                        <div class="card-header">
+                                                            <h5 class="text-info">Event Attend Information</h5>
+                                                        </div>
+
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="container-fluid">
+                                                                    <table id="event-attend-list" class="table table-striped nowrap">
+                                                                        <thead class="thead-light">
+                                                                        <th scope="col">Action</th>
+                                                                        <th scope="col">Event Code</th>
+                                                                        <th scope="col">Event Name</th>
+                                                                        <th scope="col">Status</th>
+                                                                        <th scope="col">Final Grade</th>
+                                                                        <th scope="col">Completion Level</th>
+                                                                        <th scope="col">Certificate ID</th>
+                                                                        </thead>
+                                                                        <tbody id="table-events">
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-primary footer-button" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!--Edit Candidate Modal-->
+            <div class="modal fade" id="candidate-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog cascading-modal modal-avatar modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="text-info pt-2">Candidate Information Edit</h3>
+                            <button class="btn btn-small float-left" id="close-edit-candidate"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid text-center">
+                                <i class="fas fa-user fa-4x"></i>
+                            </div>
+                            <span id="candidate-id" hidden></span>
+                            <br>
+                            <span id="edit-candidate-message"></span>
+                            <br>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Name</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-name" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Gender</label>
+                                </div>
+                                <div class="col-4">
+                                    <form>
+                                        <label class="radio-inline">
+                                            <input id="gender-male" type="radio" name="optradio">Male
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input id="gender-female" type="radio" name="optradio">Female
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Date of Birth</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-dob" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">University</label>
+                                </div>
+                                <div class="col-4">
+                                    <select id="c-university" class="form-control" type="text"></select>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Faculty</label>
+                                </div>
+                                <div class="col-4">
+                                    <select id="c-faculty" class="form-control"></select>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Grade</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-grade" class="form-control" type="number">
+                                </div>
+
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Skill</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-skill" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Account</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-account" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Email</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-email" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Phone</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-phone" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Facebook</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-facebook" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">Graduation Date</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-graduation" class="form-control" type="text">
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-primary pt-1">FullTime Date</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="c-fulltime" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success footer-button" id="save-edit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Profile Modal-->
+            <div class="modal fade" id="profile-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-notify modal-danger" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Profile</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container text-center">
+                                <i class="fas fa-id-badge fa-4x blue-icon"></i>
+                                <h3 class="text-info pt-1 pb-3" th:text="${admin}"></h3>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-xl-6 col-lg-6 col-mb-6 col-sm-6">
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-mb-6 col-sm-6">
+                                    <button id="profile-enable-edit" class="btn btn-info float-right">
+                                        <i class="fas fa-lock-open green-icon nav-icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-2">
+                                    <label class="text-info" for="profile-name">Name</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-name" class="form-control" disabled>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-success" for="profile-email">Email</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-email" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-2">
+                                    <label class="text-warning" for="profile-name">Phone</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-phone" class="form-control" disabled>
+                                </div>
+                                <div class="col-2">
+                                    <label class="text-danger" for="profile-email">Unit</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="profile-unit" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Response Modal-->
+            <div class="modal fade" id="response-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-mb modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Message</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="text-info" id="response-message"></h3>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--History Modal-->
+            <div class="modal fade" id="activity-log-modal" role="dialog" tabindex="-1" aria-labelledby="exampleModalLab" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-notify modal-danger" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="text-info pt-2">Activity Log</h5>
+                            <button class="btn btn-small float-left" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <i class="fas fa-history fa-4x red-icon"></i>
+                            <h3 class="text-info pt-1 pb-3" th:text="${admin}"></h3>
+                            <table class="table table-striped table-bordered">
+                                <thead class="thead-light">
+                                <th scope="col" width="5%">#</th>
+                                <th scope="col" width="20%">Time</th>
+                                <th scope="col" width="50%">Activity</th>
+                                <th scope="col" width="25%">Result</th>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="modal-footer flex-center">
+                            <button type="button" class="btn btn-outline-danger footer-button" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Manager TM @ 2019</span>
+                    </div>
+                </div>
+            </footer>
+            <a class="scroll-to-top rounded" href="#page-top" style="display: inline;">
+                <i class="fas fa-angle-up"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<script src="../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+<script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+<script src="../static/vendor/datatables/jquery.dataTables.js" th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+<script src="../static/vendor/datatables/dataTables.bootstrap4.js" th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+<script src="../static/js/candidates.js" th:src="@{/js/candidates.js}"></script>
+<script src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+
+</body>
+</html>
