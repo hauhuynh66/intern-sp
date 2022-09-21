@@ -45,9 +45,6 @@ public class Excel {
         }catch (IOException io){
             System.out.println("IO Exception : " +filePath);
             return null;
-        }catch (InvalidFormatException iv){
-            System.out.println("Invalid Format Exception : "+ filePath);
-            return null;
         }
     }
     public Map<Integer,List<String>> readSheet(Sheet sheet){
@@ -72,14 +69,14 @@ public class Excel {
         return null;
     }
     private boolean checkFormula(Cell cell){
-        return cell.getCellTypeEnum() == CellType.FORMULA;
+        return cell.getCellType() == CellType.FORMULA;
     }
     private Object readCell(Cell cell){
         DataFormatter dataFormatter = new DataFormatter();
         if(!checkFormula(cell)){
             return dataFormatter.formatCellValue(cell);
         }else {
-            switch (cell.getCachedFormulaResultTypeEnum()){
+            switch (cell.getCachedFormulaResultType()){
                 case NUMERIC:
                     if(DateUtil.isCellDateFormatted(cell)){
                         return cell.getDateCellValue();

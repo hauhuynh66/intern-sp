@@ -7,7 +7,6 @@ import com.intern.model.University;
 import com.intern.repository.CandidateRepository;
 import com.intern.repository.EventRepository;
 import com.intern.repository.StatusRepository;
-import org.apache.poi.ss.formula.functions.Even;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
