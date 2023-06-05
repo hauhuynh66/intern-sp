@@ -1,7 +1,9 @@
-package com.intern.security;
+package com.intern.service;
 
 import com.intern.model.Admin;
 import com.intern.repository.AdminRepository;
+import com.intern.security.CustomUserDetails;
+import com.intern.security.LoginAttempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
-public class CustomUserDetailService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     @Autowired
     private AdminRepository adminRepository;
     @Autowired

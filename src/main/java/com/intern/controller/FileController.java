@@ -1,7 +1,6 @@
 package com.intern.controller;
 
-import com.intern.misc.UploadFile;
-import com.intern.model.Admin;
+import com.intern.data.UploadFile;
 import com.intern.model.UploadHistory;
 import com.intern.repository.UploadHistoryRepository;
 import com.intern.utils.ExcelService;

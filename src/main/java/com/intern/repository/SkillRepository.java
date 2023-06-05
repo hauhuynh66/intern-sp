@@ -4,5 +4,5 @@ import com.intern.model.Skill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SkillRepository extends JpaRepository<Skill,Integer> {
-    Skill findBySkillName(String skillName);
+    Skill findByName(String skillName);
 }

@@ -1,6 +1,6 @@
 package com.intern.utils;
 
-import com.intern.misc.Mail;
+import com.intern.data.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;

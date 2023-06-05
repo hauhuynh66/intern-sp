@@ -180,7 +180,7 @@ public class ExcelService {
                             event.setFeedbackOrganization(eventList.get(i).get(23));
                             event.setSite(siteRepository.findBySite(eventList.get(i).get(0)));
                             event.setProgram(programRepository.findByName(eventList.get(i).get(2)));
-                            event.setSkill(skillRepository.findBySkillName(eventList.get(i).get(4)));
+                            event.setSkill(skillRepository.findByName(eventList.get(i).get(4)));
                             event.setUniversity(university);
                             event.setCourseCode(eventList.get(i).get(1));
                             eventRepository.save(event);

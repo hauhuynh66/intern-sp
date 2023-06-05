@@ -1,4 +1,4 @@
-package com.intern.misc;
+package com.intern.data;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UploadFile {

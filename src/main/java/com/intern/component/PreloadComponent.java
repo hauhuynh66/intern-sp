@@ -1,4 +1,4 @@
-package com.intern.testdb;
+package com.intern.component;
 
 import com.intern.model.Admin;
 import com.intern.model.Program;
@@ -16,7 +16,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommandLine implements CommandLineRunner {
+public class PreloadComponent implements CommandLineRunner {
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
@@ -24,21 +24,18 @@ public class CommandLine implements CommandLineRunner {
     @Autowired
     private UniversityRepository universityRepository;
     @Autowired
-    private SkillRepository skillRepository;
-    @Autowired
     private SiteRepository siteRepository;
     @Autowired
     private ProgramRepository programRepository;
     @Autowired
     private EventRepository eventRepository;
     @Autowired
-    private CandidateRepository candidateRepository;
-    @Autowired
     private MainService mainService;
     @Autowired
     private CandidateService candidateService;
     @Autowired
     private StatusRepository statusRepository;
+
     @Autowired
     private Utils utils;
     @Autowired
@@ -49,43 +46,34 @@ public class CommandLine implements CommandLineRunner {
     private ExcelService data;
     @Override
     public void run(String... args) throws Exception {
-        Admin admin = new Admin();
-        admin = new Admin();
-        admin.setName("Hau");
-        admin.setPassword(utils.encoder().encode("Hauhuynh"));
-        admin.setMail("hauhuynh66@gmail.com");
-        admin.setRole("ADMIN");
-        admin.setPermission("ACCESS_MANAGE");
+        Admin admin = new Admin.Builder()
+                .name("Hau", "Huynh")
+                .password("Hauhuynh")
+                .mail("hauhuynh66@gmail.com")
+                .role("ADMIN")
+                .permission("MANAGE")
+                .build();
         adminRepository.save(admin);
-        Admin owner = new Admin();
-        owner = new Admin();
-        owner.setName("HauHP");
-        owner.setPassword(utils.encoder().encode("phuochau"));
-        owner.setMail("phuochau@gmail.com");
-        owner.setRole("OWNER");
-        owner.setPermission("ACCESS_MANAGE");
-        adminRepository.save(owner);
         loadSkill();
         loadProgram();
         loadSites();
     }
     private void loadSkill(){
-        Skill []skills = new Skill[9];
-        for (int i=0;i<skills.length;i++){
-            skills[i] = new Skill();
+        String[] skills = {
+                "NET",
+                "TEST",
+                "JAVA",
+                "ANDROID",
+                "IOS",
+                "AI&ML",
+                "EMBEDDED",
+                "ALL"
+        };
+
+        for(String s: skills) {
+            candidateService.saveSkill(new Skill(s));
         }
-        skills[0].setSkillName("NET");
-        skills[1].setSkillName("TEST");
-        skills[2].setSkillName("JAVA");
-        skills[3].setSkillName("IOS");
-        skills[4].setSkillName("ANDROID");
-        skills[5].setSkillName("Đề tài tốt nghiệp");
-        skills[6].setSkillName("AI&ML");
-        skills[7].setSkillName("EMBED");
-        skills[8].setSkillName("ALL");
-        for(int i =0;i<skills.length;i++){
-            skillRepository.save(skills[i]);
-        }
+
     }
     private void loadProgram(){
         Program []programs = new Program[10];

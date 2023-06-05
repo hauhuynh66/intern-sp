@@ -60,7 +60,7 @@ public class FilterController {
         List<String> skillList = new ArrayList<>();
         List<Skill> skills = skillRepository.findAll();
         for(Skill skill:skills){
-            skillList.add(skill.getSkillName());
+            skillList.add(skill.getName());
         }
         return skillList;
     }
@@ -140,8 +140,8 @@ public class FilterController {
                         facultyRepository.findByCodeAndName(fCode,fName));
         List<String> res = new ArrayList<>();
         for(Event event:events){
-            if(!utils.isAvailable(event.getSkill().getSkillName(),res)){
-                res.add(event.getSkill().getSkillName());
+            if(!utils.isAvailable(event.getSkill().getName(),res)){
+                res.add(event.getSkill().getName());
             }
         }
         return res;
@@ -156,7 +156,7 @@ public class FilterController {
         List<String> res = new ArrayList<>();
         for(String e:ev){
             Event event = eventRepository.findByCourseCode(e);
-            if(event.getSkill().getSkillName().equals(skill)){
+            if(event.getSkill().getName().equals(skill)){
                 res.add(event.getCourseCode());
             }
         }
@@ -166,7 +166,7 @@ public class FilterController {
     @ResponseBody
     private String getFilterSkill(@RequestParam("code")String code){
         Event event = eventRepository.findByCourseCode(code);
-        return event.getSkill().getSkillName();
+        return event.getSkill().getName();
     }
     /*@GetMapping("/candidates/filter")
     @ResponseBody
@@ -258,11 +258,11 @@ public class FilterController {
             return candidates;
         }
     }
-    private List<Candidate> filterBySkill(List<Candidate> candidates,String skillname){
-        if(skillname=="--ALL--"){
+    private List<Candidate> filterBySkill(List<Candidate> candidates,String Name){
+        if(Name=="--ALL--"){
             return candidates;
         }else{
-            Skill skill = skillRepository.findBySkillName(skillname);
+            Skill skill = skillRepository.findByName(Name);
             if(skill==null){
                 return new ArrayList<>();
             }else{

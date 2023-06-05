@@ -39,7 +39,7 @@ public class CandidateSerializer extends StdSerializer<Candidate> {
         jsonGenerator.writeStringField("graduationDate",candidate.getGraduationDate()+"");
         jsonGenerator.writeStringField("fulltimeDate",candidate.getFulltimeDate()+"");
         jsonGenerator.writeObjectFieldStart("skill");
-        jsonGenerator.writeStringField("name",candidate.getSkill().getSkillName());
+        jsonGenerator.writeStringField("name",candidate.getSkill().getName());
         jsonGenerator.writeEndObject();
         jsonGenerator.writeStringField("gpa",candidate.getGpa()+"");
         jsonGenerator.writeEndObject();

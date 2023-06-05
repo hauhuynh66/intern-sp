@@ -121,7 +121,7 @@ public class Event {
     public void setCourseCode() {
         this.courseCode = this.university.getCode()+"_"+
                             this.program.getCode()+"_"+
-                            this.skill.getSkillName()+"_"+
+                            this.skill.getName()+"_"+
                             this.site.getSite()+getYear(this.plannedStartDate)+"_"+
                             formatInt(this.id);
     }

@@ -72,7 +72,7 @@ public class CustomValidationService {
             boolean t = false;
             List<Skill> skills = skillRepository.findAll();
             for(Skill skill:skills){
-                if(skill.getSkillName().equals(skillName)){
+                if(skill.getName().equals(skillName)){
                     t = true;
                     break;
                 }

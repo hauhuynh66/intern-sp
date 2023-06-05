@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
@@ -14,11 +15,15 @@ import java.util.*;
 public class Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(updatable = true)
     private int id;
+
     private int nationalId;
+
+    @NotNull
     @Column(nullable = false)
     private String account;
+
+    @NotNull
     @Column(nullable = false)
     private String name;
     @Temporal(TemporalType.DATE)

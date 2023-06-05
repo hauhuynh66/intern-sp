@@ -1,73 +1,94 @@
 package com.intern.model;
 
+import lombok.Getter;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Entity
 @Table(name="admin")
+@Getter
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
+
+    @NotNull
+    @Length(min = 2, max = 20)
+    private String firstName;
+
+    @NotNull
+    @Length(min = 2, max = 20)
+    private String lastName;
+
+    @NotNull
     private String name;
+
+    @NotNull
+    @Length(max = 255, min = 10)
     @Column(name = "email",unique = true,nullable = false)
     private String mail;
+
+    @NotNull
     @Column(name = "password",nullable = true)
     private String password;
+
     private String role;
+
     private String permission;
 
     public Admin() {
+
     }
 
-    public int getId() {
-        return id;
-    }
+    public static class Builder {
+        private final Admin admin;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+        public Builder() {
+            this.admin = new Admin();
+        }
 
-    public String getName() {
-        return name;
-    }
+        public Builder name(String first, String last){
+            admin.firstName = first;
+            admin.lastName = last;
+            admin.name = admin.firstName + admin.lastName;
+            return this;
+        }
+        public Builder mail(String mail){
+            admin.mail = mail;
+            return this;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public Builder password(String password){
+            admin.password = password;
+            return this;
+        }
 
-    public String getMail() {
-        return mail;
-    }
+        public Builder role(String...roles) {
+            StringBuilder sb = new StringBuilder();
+            for(String role : roles) {
+                sb.append(String.format("%s,", role));
+            }
+            admin.role = sb.toString();
+            return this;
+        }
 
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
+        public Builder permission(String...permissions) {
+            StringBuilder sb = new StringBuilder();
+            for(String permission : permissions) {
+                sb.append(String.format("%s,", permission));
+            }
+            admin.permission = sb.toString();
+            return this;
+        }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
+        public Admin build() {
+            return this.admin;
+        }
     }
 
     public List<String> getRoleList(){
@@ -76,6 +97,7 @@ public class Admin {
         }
         return new ArrayList<>();
     }
+
     public List<String> getPermissionList(){
         if(this.permission.length()>0){
             return Arrays.asList(this.permission.split(","));

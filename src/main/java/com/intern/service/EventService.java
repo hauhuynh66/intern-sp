@@ -48,7 +48,7 @@ public class EventService {
         for(int i=0;i<events.size();i++){
             boolean isContains = false;
             for(String skill:skillName){
-                if(events.get(i).getSkill().getSkillName().equals(skill)){
+                if(events.get(i).getSkill().getName().equals(skill)){
                     isContains = true;
                     break;
                 }

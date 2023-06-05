@@ -107,10 +107,10 @@ public class MainService {
             return new ArrayList<>();
         }else{
             List<String> skills = new ArrayList<>();
-            skills.add(events.get(0).getSkill().getSkillName());
+            skills.add(events.get(0).getSkill().getName());
             for(int i=0;i<events.size();i++){
-                if(!utils.isAvailable(events.get(i).getSkill().getSkillName(),skills)){
-                    skills.add(events.get(i).getSkill().getSkillName());
+                if(!utils.isAvailable(events.get(i).getSkill().getName(),skills)){
+                    skills.add(events.get(i).getSkill().getName());
                 }
             }
             return skills;
@@ -127,11 +127,11 @@ public class MainService {
         }
         return universities;
     }
-    private List<String> getListOfSkillName(){
+    private List<String> getListOfName(){
         List<String> list = new ArrayList<String>();
         List<Skill> skills = skillRepository.findAll();
         skills.forEach(item -> {
-            list.add(item.getSkillName());
+            list.add(item.getName());
         });
         return list;
     }
@@ -174,7 +174,7 @@ public class MainService {
         int count = 0;
         for(int i=0;i<candidates.size();i++){
             Skill skill = candidates.get(i).getSkill();
-            if(skill.getSkillName().equals(skillCode)){
+            if(skill.getName().equals(skillCode)){
                 count += 1;
             }
         }
@@ -182,7 +182,7 @@ public class MainService {
     }
 
     private Map<String,Integer> getNumberEachSkillOfCandidate(List<Candidate> candidates){
-        List<String> skillList = getListOfSkillName();
+        List<String> skillList = getListOfName();
         Map<String,Integer> data = new HashMap<>();
         for(int i=0;i<skillList.size();i++){
             int number = countNumberOfSkillCodeInCandidate(skillList.get(i),candidates);
@@ -216,7 +216,7 @@ public class MainService {
         int count = 0;
         for(int i=0;i<events.size();i++){
             Skill skill = events.get(i).getSkill();
-            if(skill.getSkillName().equals(skillCode)){
+            if(skill.getName().equals(skillCode)){
                 count += 1;
             }
         }
@@ -224,7 +224,7 @@ public class MainService {
     }
 
     private Map<String,Integer> getNumberEachSkillOfEvent(List<Event> events){
-        List<String> skillList = getListOfSkillName();
+        List<String> skillList = getListOfName();
         Map<String,Integer> data = new HashMap<>();
         for(int i=0;i<skillList.size();i++){
             int number = countNumberOfSkillCodeInEvent(skillList.get(i),events);

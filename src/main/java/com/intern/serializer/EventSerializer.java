@@ -38,7 +38,7 @@ public class EventSerializer extends StdSerializer<Event> {
         jsonGenerator.writeStringField("name",event.getSite().getSite());
         jsonGenerator.writeEndObject();
         jsonGenerator.writeObjectFieldStart("skill");
-        jsonGenerator.writeStringField("name",event.getSkill().getSkillName());
+        jsonGenerator.writeStringField("name",event.getSkill().getName());
         jsonGenerator.writeEndObject();
         jsonGenerator.writeNumberField("students", event.getStatuses().size());
         jsonGenerator.writeStringField("subjectType",event.getSubjectType());

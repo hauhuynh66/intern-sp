@@ -13,6 +13,7 @@ public class StatusService {
     private CustomValidationService validationService;
     public boolean saveStatus(Status status) throws Exception{
         validationService.validGrade(status.getFinalGrade());
-        return statusRepository.save(status)!=null;
+        statusRepository.save(status);
+        return true;
     }
 }

@@ -443,7 +443,7 @@ public class Excel {
 
                 cell = row.createCell(4);
                 cell.setCellStyle(style);
-                cell.setCellValue(event.getSkill().getSkillName());
+                cell.setCellValue(event.getSkill().getName());
 
                 cell = row.createCell(5);
                 cell.setCellStyle(style);

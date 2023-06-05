@@ -51,6 +51,7 @@ public class CandidateController {
         candidateService.deleteCandidate(id);
         return "Success";
     }
+
     @GetMapping("/new")
     @ResponseBody
     public List<String> newCandidate(@RequestParam Map<String,String> params)throws Exception{

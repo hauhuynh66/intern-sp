@@ -7,8 +7,8 @@ import com.intern.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +32,14 @@ public class CandidateService {
     private Utils utils;
     @Autowired
     private Converter converter;
+
+    @Transactional
+    public void saveSkill(Skill...skills) {
+        for(Skill skill : skills) {
+            skillRepository.save(skill);
+        }
+    }
+
     public List<Status> filterByUniversity(List<Status> statusList,List<University> universities){
         if(universities==null){
             return statusList;
@@ -94,7 +102,7 @@ public class CandidateService {
         for(int i=0;i<statusList.size();i++){
             boolean isContain = false;
             for(String skill:skillName){
-                if(statusList.get(i).getCandidate().getSkill().getSkillName().equals(skill)){
+                if(statusList.get(i).getCandidate().getSkill().getName().equals(skill)){
                     isContain = true;
                     break;
                 }
@@ -196,7 +204,7 @@ public class CandidateService {
         candidate.setAccount(params.get("account"));
         candidate.setPhone(params.get("phone"));
         candidate.setFacebook(params.get("facebook"));
-        Skill skill = skillRepository.findBySkillName(params.get("skill"));
+        Skill skill = skillRepository.findByName(params.get("skill"));
         candidate.setSkill(skill);
         candidate.setDateOfBirth(converter.stringToDate(params.get("dob"),"MM/dd/yyyy"));
         candidate.setGraduationDate(converter.stringToDate(params.get("graduation"),"MM/dd/yyyy"));
